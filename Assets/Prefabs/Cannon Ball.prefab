@@ -99,7 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22cc6cbf95cd637448ea197dedf0fcde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifetime: 4
+  lifetime: 5
 --- !u!50 &-518060583373136966
 Rigidbody2D:
   serializedVersion: 4

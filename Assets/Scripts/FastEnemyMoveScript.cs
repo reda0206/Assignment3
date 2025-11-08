@@ -2,15 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BasicEnemyMoveScript : MonoBehaviour
+public class FastEnemyMoveScript : MonoBehaviour
 {
-    public float moveSpeed = 4f;
-    public float health = 120f;
+    public float moveSpeed = 8f;
+    public float health = 60f;
     public float destroyingCooldown = 0.75f;
     public float damageToTower = 10f;
     private float originalMoveSpeed;
     private bool isStopped = false;
-    public float lastDestroyingTime = -Mathf.Infinity; 
+    public float lastDestroyingTime = -Mathf.Infinity;
     private Rigidbody2D rb;
     void Start()
     {
@@ -80,7 +80,7 @@ public class BasicEnemyMoveScript : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Tower")) 
+        if (collision.gameObject.CompareTag("Tower"))
         {
             isStopped = false;
             moveSpeed = originalMoveSpeed;
