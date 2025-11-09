@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BasicEnemyMoveScript : MonoBehaviour
+public class StrongEnemyMoveScript : MonoBehaviour
 {
-    public float moveSpeed = 4f;
-    public float health = 120f;
+    public float moveSpeed = 2f;
+    public float health = 240f;
     public float destroyingCooldown = 0.75f;
     public float damageToTower = 10f;
     private float originalMoveSpeed;
@@ -74,7 +74,7 @@ public class BasicEnemyMoveScript : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Tower")) 
+        if (collision.gameObject.CompareTag("Tower"))
         {
             if (destroying != null)
             {
@@ -91,7 +91,7 @@ public class BasicEnemyMoveScript : MonoBehaviour
     {
         if (tower == null) yield break;
 
-        while (tower!= null)
+        while (tower != null)
         {
             tower.health -= damageToTower;
             Debug.Log("-10 Tower Health!");
@@ -112,7 +112,7 @@ public class BasicEnemyMoveScript : MonoBehaviour
 
     private IEnumerator SlowDown()
     {
-               moveSpeed = 2f;
+        moveSpeed = 1f;
         GetComponent<SpriteRenderer>().color = slowedColor;
         yield return new WaitForSeconds(5f);
         moveSpeed = originalMoveSpeed;

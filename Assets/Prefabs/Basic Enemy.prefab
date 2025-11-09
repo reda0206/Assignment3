@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 6877156982011593303}
   - component: {fileID: 6442383524040321614}
   - component: {fileID: 5396833602468098080}
-  - component: {fileID: 4435148911049056074}
   - component: {fileID: 5202286580842955907}
+  - component: {fileID: -816532909481904173}
   m_Layer: 0
   m_Name: Basic Enemy
   m_TagString: Enemy
@@ -132,20 +132,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &4435148911049056074
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 202458347722778483}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8b16cb4dd873974b9ca3f53c5c91842, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 4
-  health: 120
 --- !u!50 &5202286580842955907
 Rigidbody2D:
   serializedVersion: 4
@@ -173,3 +159,19 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 6
+--- !u!114 &-816532909481904173
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 202458347722778483}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8b16cb4dd873974b9ca3f53c5c91842, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 4
+  health: 120
+  destroyingCooldown: 0.75
+  damageToTower: 10

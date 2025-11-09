@@ -10,12 +10,16 @@ public class FastEnemyMoveScript : MonoBehaviour
     public float damageToTower = 10f;
     private float originalMoveSpeed;
     private bool isStopped = false;
-    public float lastDestroyingTime = -Mathf.Infinity;
     private Rigidbody2D rb;
+    private Coroutine destroying;
+    private Color originalColor;
+    private Color slowedColor = Color.cyan;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         originalMoveSpeed = moveSpeed;
+        originalColor = GetComponent<SpriteRenderer>().color;
     }
 
 
@@ -39,11 +43,22 @@ public class FastEnemyMoveScript : MonoBehaviour
                 Destroy(gameObject);
             }
         }
+        else if (collision.gameObject.CompareTag("IceCannonBall"))
+        {
+            StartCoroutine(SlowDown());
+            Debug.Log("Enemy Slowed!");
+            Destroy(collision.gameObject);
+        }
         else if (collision.gameObject.CompareTag("Tower"))
         {
             isStopped = true;
             moveSpeed = 0f;
-            lastDestroyingTime = Time.time - destroyingCooldown;
+            
+            if (destroying == null)
+            {
+                var tower = collision.gameObject.GetComponent<TowerScript>();
+                destroying = StartCoroutine(DestroyTower(tower));
+            }
         }
 
         else if (collision.gameObject.CompareTag("House"))
@@ -58,26 +73,6 @@ public class FastEnemyMoveScript : MonoBehaviour
         }
     }
 
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        if (!collision.gameObject.CompareTag("Tower")) return;
-        {
-            if (Time.time - lastDestroyingTime >= destroyingCooldown)
-            {
-                var tower = collision.gameObject.GetComponent<TowerScript>();
-                if (tower != null)
-                {
-                    tower.health -= damageToTower;
-                    Debug.Log($"- {damageToTower} Tower Health!");
-                    if (tower.health <= 0f)
-                    {
-                        Destroy(collision.gameObject);
-                    }
-                }
-            }
-        }
-    }
-
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Tower"))
@@ -85,5 +80,37 @@ public class FastEnemyMoveScript : MonoBehaviour
             isStopped = false;
             moveSpeed = originalMoveSpeed;
         }
+    }
+
+    private IEnumerator DestroyTower(TowerScript tower)
+    {
+        if (tower == null) yield break;
+
+        while (tower != null)
+        {
+            tower.health -= damageToTower;
+            Debug.Log("-10 Tower Health!");
+
+            if (tower.health <= 0f)
+            {
+                Destroy(tower.gameObject);
+                break;
+            }
+
+            yield return new WaitForSeconds(destroyingCooldown);
+        }
+
+        destroying = null;
+        isStopped = false;
+        moveSpeed = originalMoveSpeed;
+    }
+
+    private IEnumerator SlowDown()
+    {
+        moveSpeed = 4f;
+        GetComponent<SpriteRenderer>().color = slowedColor;
+        yield return new WaitForSeconds(5f);
+        moveSpeed = originalMoveSpeed;
+        GetComponent<SpriteRenderer>().color = originalColor;
     }
 }

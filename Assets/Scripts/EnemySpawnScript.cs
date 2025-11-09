@@ -6,7 +6,7 @@ public class EnemySpawnScript : MonoBehaviour
 {
     public GameObject[] enemyPrefabs;
     public GameObject[] spawnPrefabs;
-    public float spawnInterval = 8f;
+    public float spawnInterval = 30f;
     private float timer;
     public float timer2 = 60f;
     public int difficultyLevel = 1;
@@ -16,17 +16,27 @@ public class EnemySpawnScript : MonoBehaviour
         timer += Time.deltaTime;
         if (timer >= spawnInterval)
         {
-            SpawnEnemy();
-            timer = 0f;
+            if (spawnInterval == 30f)
+            {
+                spawnInterval = 10f;
+                timer = 0f;
+            }
+            else
+            {
+                SpawnEnemy();
+                timer = 0f;
+            }
         }
         timer2 -= Time.deltaTime;
+
         if (timer2 <= 0f)
         {
             difficultyLevel += 1;
-            timer2 = 16f;
-            if (spawnInterval > 2f)
+            timer2 = 60f;
+
+            if (spawnInterval > 2f) 
             {
-                spawnInterval -= 1f;
+               spawnInterval -= 1f;
             }
         }
     }
@@ -39,14 +49,14 @@ public class EnemySpawnScript : MonoBehaviour
         int spawnIndex = Random.Range(0, spawnPrefabs.Length);
         Instantiate(enemyPrefabs[enemyIndex], spawnPrefabs[spawnIndex].transform.position, Quaternion.identity);
         }
-        else if (difficultyLevel >= 3)
+        else if (difficultyLevel < 5)
         {
             int enemyIndex = Random.Range(0, enemyPrefabs.Length - 1);
             int spawnIndex = Random.Range(0, spawnPrefabs.Length);
             Instantiate(enemyPrefabs[enemyIndex], spawnPrefabs[spawnIndex].transform.position, Quaternion.identity);
         }
 
-        else if (difficultyLevel >= 6)
+        else 
         {
             int enemyIndex = Random.Range(0, enemyPrefabs.Length);
             int spawnIndex = Random.Range(0, spawnPrefabs.Length);
