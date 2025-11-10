@@ -9,6 +9,7 @@ TagManager:
   - CannonBall
   - House
   - IceCannonBall
+  - Lawn
   layers:
   - Default
   - TransparentFX
