@@ -8,7 +8,6 @@ public class CannonScript : MonoBehaviour
     public float shootCooldown = 1f;
     private float lastShootTime = -Mathf.Infinity;
 
-    
     void Update()
     {
         if (Time.time - lastShootTime >= shootCooldown)
@@ -23,6 +22,4 @@ public class CannonScript : MonoBehaviour
         GameObject cannonBall = Instantiate(cannonBallPrefab, transform.position, transform.rotation);
         Rigidbody2D rb = cannonBall.GetComponent<Rigidbody2D>();
     }
-
-   
 }

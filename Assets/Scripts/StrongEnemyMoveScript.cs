@@ -91,6 +91,8 @@ public class StrongEnemyMoveScript : MonoBehaviour
     {
         if (tower == null) yield break;
 
+        LawnScript lawn = tower.lawnTile;
+
         while (tower != null)
         {
             tower.health -= damageToTower;
@@ -99,6 +101,7 @@ public class StrongEnemyMoveScript : MonoBehaviour
             if (tower.health <= 0f)
             {
                 Destroy(tower.gameObject);
+                lawn.isOccupied = false;
                 break;
             }
 

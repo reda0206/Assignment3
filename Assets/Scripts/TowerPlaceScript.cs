@@ -14,43 +14,12 @@ public class TowerPlaceScript : MonoBehaviour
     public GameObject iceCannonPrefab;
     public GameObject wallPrefab;
 
-    public Image cannonImage;
-    public Image iceCannonImage;
-    public Image wallImage;
-
-    private void Update()
-    {
-        if (isCannon == true)
-        {
-            cannonImage.color = Color.green;
-            iceCannonImage.color = Color.white;
-            wallImage.color = Color.white;
-
-            cannonImage.transform.position = Input.mousePosition;
-        }
-        else if (isIceCannon == true)
-        {
-            cannonImage.color = Color.white;
-            iceCannonImage.color = Color.green;
-            wallImage.color = Color.white;
-
-            iceCannonImage.transform.position = Input.mousePosition;
-        }
-        else if (isWall == true)
-        {
-            cannonImage.color = Color.white;
-            iceCannonImage.color = Color.white;
-            wallImage.color = Color.green;
-
-            wallImage.transform.position = Input.mousePosition;
-        }
-    }
-
     public void CannonButton()
     {
         isCannon = true;
         isIceCannon = false;
         isWall = false;
+
     }
 
     public void IceCannonButton()
@@ -67,30 +36,25 @@ public class TowerPlaceScript : MonoBehaviour
         isWall = true;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnMouseDown()
     {
-        if (collision.gameObject.CompareTag("Lawn"))
+        if (isCannon == true)
         {
-            {
-                if (collision.gameObject.GetComponent<LawnScript>().isOccupied == false)
-                {
-                    if (isCannon == true)
-                    {
-                        Instantiate(cannonPrefab, collision.transform.position, Quaternion.identity);
-                        collision.gameObject.GetComponent<LawnScript>().isOccupied = true;
-                    }
-                    else if (isIceCannon == true)
-                    {
-                        Instantiate(iceCannonPrefab, collision.transform.position, Quaternion.identity);
-                        collision.gameObject.GetComponent<LawnScript>().isOccupied = true;
-                    }
-                    else if (isWall == true)
-                    {
-                        Instantiate(wallPrefab, collision.transform.position, Quaternion.identity);
-                        collision.gameObject.GetComponent<LawnScript>().isOccupied = true;
-                    }
-                }
-            }
+            Instantiate(cannonPrefab, transform.position, Quaternion.identity);
+            cannonPrefab.transform.position = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0);
+            isCannon = false;
+        }
+        else if (isIceCannon == true)
+        {
+            Instantiate(iceCannonPrefab, transform.position, Quaternion.identity);
+            iceCannonPrefab.transform.position = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0);
+            isIceCannon = false;
+        }
+        else if (isWall == true)
+        {
+            Instantiate(wallPrefab, transform.position, Quaternion.identity);
+            wallPrefab.transform.position = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0);
+            isWall = false;
         }
     }
 }
