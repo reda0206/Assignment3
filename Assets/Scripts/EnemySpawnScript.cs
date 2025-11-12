@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class EnemySpawnScript : MonoBehaviour
 {
@@ -10,10 +11,24 @@ public class EnemySpawnScript : MonoBehaviour
     private float timer;
     public float timer2 = 60f;
     public int difficultyLevel = 1;
+    public TextMeshProUGUI prepareText;
+    public float prepareTime = 40f;
+
+    private void Start()
+    {
+        prepareText.text = "Prepare... " + Mathf.CeilToInt(prepareTime).ToString() + "s";
+    }
 
     private void Update()
     {
         timer += Time.deltaTime;
+        prepareText.text = "Prepare... " + Mathf.CeilToInt(prepareTime).ToString() + "s";
+        prepareTime -= Time.deltaTime;
+
+        if (prepareTime <= 0f)
+        {
+            prepareText.gameObject.SetActive(false);
+        }
         if (timer >= spawnInterval)
         {
             if (spawnInterval == 30f)
@@ -34,7 +49,7 @@ public class EnemySpawnScript : MonoBehaviour
             difficultyLevel += 1;
             timer2 = 60f;
 
-            if (spawnInterval > 2f) 
+            if (spawnInterval > 3f) 
             {
                spawnInterval -= 1f;
             }
