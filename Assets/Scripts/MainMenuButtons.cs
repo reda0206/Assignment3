@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class WinSceneButtons : MonoBehaviour
+public class MainMenuButtons : MonoBehaviour
 {
-    public void RestartButton()
+    public void StartButton()
     {
         SceneManager.LoadScene("SampleScene");
     }
 
-    public void BackToMenuButton()
+    public void CreditsButton()
     {
-        SceneManager.LoadScene("MainMenuScene");
+        SceneManager.LoadScene("CreditsScene");
     }
 
-    public void QuitGameButton()
+    public void QuitButton()
     {
         Application.Quit();
     }

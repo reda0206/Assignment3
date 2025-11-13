@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI timerText;
     public float energy = 40f;
     public float timer2 = 10f;
+    public float prepareTime = 50f;
     public TextMeshProUGUI energyText;
 
     private bool isBattery = false;
@@ -45,16 +46,24 @@ public class GameManager : MonoBehaviour
     {
         timerText.text = "Time Left: " + Mathf.CeilToInt(timer).ToString() + "s";
         energyText.text = "Energy: " + Mathf.CeilToInt(energy).ToString();
+        timerText.gameObject.SetActive(false);
     }
 
     private void Update()
     {
-        timer -= Time.deltaTime;
-        timerText.text = "Time Left: " + Mathf.CeilToInt(timer).ToString() + "s";
-        if (timer <= 0)
+        prepareTime -= Time.deltaTime;
+        if (prepareTime <= 0)
         {
-            SceneManager.LoadScene("WinScene");
+            timerText.gameObject.SetActive(true);
+
+            timer -= Time.deltaTime;
+            timerText.text = "Time Left: " + Mathf.CeilToInt(timer).ToString() + "s";
+            if (timer <= 0)
+            {
+                SceneManager.LoadScene("WinScene");
+            }
         }
+
         timer2 -= Time.deltaTime;
         energyText.text = "Energy: " + Mathf.CeilToInt(energy).ToString();
         if (timer2 <= 0)
@@ -64,69 +73,70 @@ public class GameManager : MonoBehaviour
         }
 
         if (Input.GetMouseButtonDown(0))
-        {
-            Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
-
-            if (hit.collider != null && hit.collider.CompareTag("Lawn"))
             {
-                LawnScript lawn = hit.collider.GetComponent<LawnScript>();
-                if (!lawn.isOccupied)
-                {
-                    Vector3 spawnPos = new Vector3(hit.collider.transform.position.x, hit.collider.transform.position.y, 0.1f);
-                    if (isBattery)
-                    {
-                        if (energy >= batteryCost)
-                        {
-                            GameObject newTower = Instantiate(batteryPrefab, spawnPos, Quaternion.identity);
-                            TowerScript towerScript = newTower.GetComponent<TowerScript>();
-                            towerScript.lawnTile = hit.collider.GetComponent<LawnScript>();
-                            lawn.isOccupied = true;
-                            energy -= batteryCost;
-                            isBattery = false;
-                        }
-                    }
+                Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
 
-                    else if (isCannon)
+                if (hit.collider != null && hit.collider.CompareTag("Lawn"))
+                {
+                    LawnScript lawn = hit.collider.GetComponent<LawnScript>();
+                    if (!lawn.isOccupied)
                     {
-                        if (energy >= cannonCost)
+                        Vector3 spawnPos = new Vector3(hit.collider.transform.position.x, hit.collider.transform.position.y, 0.1f);
+                        if (isBattery)
                         {
-                            GameObject newTower = Instantiate(cannonPrefab, spawnPos, Quaternion.identity);
-                            TowerScript towerScript = newTower.GetComponent<TowerScript>();
-                            towerScript.lawnTile = hit.collider.GetComponent<LawnScript>();
-                            lawn.isOccupied = true;
-                            energy -= cannonCost;
-                            isCannon = false;
+                            if (energy >= batteryCost)
+                            {
+                                GameObject newTower = Instantiate(batteryPrefab, spawnPos, Quaternion.identity);
+                                TowerScript towerScript = newTower.GetComponent<TowerScript>();
+                                towerScript.lawnTile = hit.collider.GetComponent<LawnScript>();
+                                lawn.isOccupied = true;
+                                energy -= batteryCost;
+                                isBattery = false;
+                            }
                         }
-                    }
-                    else if (isIceCannon)
-                    {
-                        if (energy >= iceCannonCost)
+
+                        else if (isCannon)
                         {
-                            GameObject newTower = Instantiate(iceCannonPrefab, spawnPos, Quaternion.identity);
-                            TowerScript towerScript = newTower.GetComponent<TowerScript>();
-                            towerScript.lawnTile = hit.collider.GetComponent<LawnScript>();
-                            lawn.isOccupied = true;
-                            energy -= iceCannonCost;
-                            isIceCannon = false;
+                            if (energy >= cannonCost)
+                            {
+                                GameObject newTower = Instantiate(cannonPrefab, spawnPos, Quaternion.identity);
+                                TowerScript towerScript = newTower.GetComponent<TowerScript>();
+                                towerScript.lawnTile = hit.collider.GetComponent<LawnScript>();
+                                lawn.isOccupied = true;
+                                energy -= cannonCost;
+                                isCannon = false;
+                            }
                         }
-                    }
-                    else if (isWall)
-                    {
-                        if (energy >= wallCost)
+                        else if (isIceCannon)
                         {
-                            GameObject newTower = Instantiate(wallPrefab, spawnPos, Quaternion.identity);
-                            TowerScript towerScript = newTower.GetComponent<TowerScript>();
-                            towerScript.lawnTile = hit.collider.GetComponent<LawnScript>();
-                            lawn.isOccupied = true;
-                            energy -= wallCost;
-                            isWall = false;
+                            if (energy >= iceCannonCost)
+                            {
+                                GameObject newTower = Instantiate(iceCannonPrefab, spawnPos, Quaternion.identity);
+                                TowerScript towerScript = newTower.GetComponent<TowerScript>();
+                                towerScript.lawnTile = hit.collider.GetComponent<LawnScript>();
+                                lawn.isOccupied = true;
+                                energy -= iceCannonCost;
+                                isIceCannon = false;
+                            }
+                        }
+                        else if (isWall)
+                        {
+                            if (energy >= wallCost)
+                            {
+                                GameObject newTower = Instantiate(wallPrefab, spawnPos, Quaternion.identity);
+                                TowerScript towerScript = newTower.GetComponent<TowerScript>();
+                                towerScript.lawnTile = hit.collider.GetComponent<LawnScript>();
+                                lawn.isOccupied = true;
+                                energy -= wallCost;
+                                isWall = false;
+                            }
                         }
                     }
                 }
             }
         }
-    }
+      
 
     public void BatteryButton()
     {

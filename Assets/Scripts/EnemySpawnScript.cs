@@ -7,12 +7,12 @@ public class EnemySpawnScript : MonoBehaviour
 {
     public GameObject[] enemyPrefabs;
     public GameObject[] spawnPrefabs;
-    public float spawnInterval = 30f;
+    public float spawnInterval = 50f;
     private float timer;
     public float timer2 = 60f;
     public int difficultyLevel = 1;
     public TextMeshProUGUI prepareText;
-    public float prepareTime = 40f;
+    public float prepareTime = 60f;
 
     private void Start()
     {
@@ -31,7 +31,7 @@ public class EnemySpawnScript : MonoBehaviour
         }
         if (timer >= spawnInterval)
         {
-            if (spawnInterval == 30f)
+            if (spawnInterval == 50f)
             {
                 spawnInterval = 10f;
                 timer = 0f;
