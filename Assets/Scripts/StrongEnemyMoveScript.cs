@@ -14,6 +14,9 @@ public class StrongEnemyMoveScript : MonoBehaviour
     private Coroutine destroying;
     private Color originalColor;
     private Color slowedColor = Color.cyan;
+    public AudioClip hitSound;
+    public AudioClip attackSound;
+    public AudioClip attackHouseSound;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -36,6 +39,7 @@ public class StrongEnemyMoveScript : MonoBehaviour
         {
             health -= 8f;
             Debug.Log("-8 Health!");
+            AudioSource.PlayClipAtPoint(hitSound, transform.position);
             Destroy(collision.gameObject);
             if (health <= 0f)
             {
@@ -46,6 +50,7 @@ public class StrongEnemyMoveScript : MonoBehaviour
         {
             StartCoroutine(SlowDown());
             Debug.Log("Enemy Slowed!");
+            AudioSource.PlayClipAtPoint(hitSound, transform.position);
             Destroy(collision.gameObject);
         }
         else if (collision.gameObject.CompareTag("Tower"))
@@ -67,6 +72,7 @@ public class StrongEnemyMoveScript : MonoBehaviour
             {
                 house.playerLives -= 1;
                 Debug.Log("-1 Life!");
+                AudioSource.PlayClipAtPoint(attackHouseSound, transform.position);
                 Destroy(gameObject);
             }
         }
@@ -97,6 +103,7 @@ public class StrongEnemyMoveScript : MonoBehaviour
         {
             tower.health -= damageToTower;
             Debug.Log("-10 Tower Health!");
+            AudioSource.PlayClipAtPoint(attackSound, transform.position);
 
             if (tower.health <= 0f)
             {

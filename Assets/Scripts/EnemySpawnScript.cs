@@ -12,7 +12,7 @@ public class EnemySpawnScript : MonoBehaviour
     public float timer2 = 60f;
     public int difficultyLevel = 1;
     public TextMeshProUGUI prepareText;
-    public float prepareTime = 60f;
+    public float prepareTime = 65f;
 
     private void Start()
     {
@@ -33,7 +33,7 @@ public class EnemySpawnScript : MonoBehaviour
         {
             if (spawnInterval == 50f)
             {
-                spawnInterval = 10f;
+                spawnInterval = 15f;
                 timer = 0f;
             }
             else
@@ -49,9 +49,13 @@ public class EnemySpawnScript : MonoBehaviour
             difficultyLevel += 1;
             timer2 = 60f;
 
-            if (spawnInterval > 3f) 
+            if (spawnInterval <= 15f)
             {
-               spawnInterval -= 1f;
+                spawnInterval -= 2f;
+            }
+            else if (spawnInterval > 3f)
+            {
+                spawnInterval -= 1f;
             }
         }
     }

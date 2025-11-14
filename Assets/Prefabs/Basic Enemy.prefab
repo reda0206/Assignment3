@@ -171,7 +171,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8b16cb4dd873974b9ca3f53c5c91842, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 4
+  moveSpeed: 3
   health: 120
   destroyingCooldown: 0.75
   damageToTower: 10
+  hitSound: {fileID: 8300000, guid: a6c986f70aa67f648b43e810e772dc55, type: 3}
+  attackSound: {fileID: 8300000, guid: daeb7b032b27f7c44abb7a4ab4a81d1a, type: 3}
+  attackHouseSound: {fileID: 8300000, guid: 8ce9c7e8343280e4c97920a718e55f7a, type: 3}

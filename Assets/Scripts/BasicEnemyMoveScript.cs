@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BasicEnemyMoveScript : MonoBehaviour
 {
-    public float moveSpeed = 4f;
+    public float moveSpeed = 3f;
     public float health = 120f;
     public float destroyingCooldown = 0.75f;
     public float damageToTower = 10f;
@@ -14,6 +14,9 @@ public class BasicEnemyMoveScript : MonoBehaviour
     private Coroutine destroying;
     private Color originalColor;
     private Color slowedColor = Color.cyan;
+    public AudioClip hitSound;
+    public AudioClip attackSound;
+    public AudioClip attackHouseSound;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -36,6 +39,7 @@ public class BasicEnemyMoveScript : MonoBehaviour
         {
             health -= 8f;
             Debug.Log("-8 Health!");
+            AudioSource.PlayClipAtPoint(hitSound, transform.position);
             Destroy(collision.gameObject);
             if (health <= 0f)
             {
@@ -46,6 +50,7 @@ public class BasicEnemyMoveScript : MonoBehaviour
         {
             StartCoroutine(SlowDown());
             Debug.Log("Enemy Slowed!");
+            AudioSource.PlayClipAtPoint(hitSound, transform.position);
             Destroy(collision.gameObject);
         }
         else if (collision.gameObject.CompareTag("Tower"))
@@ -67,6 +72,7 @@ public class BasicEnemyMoveScript : MonoBehaviour
             {
                 house.playerLives -= 1;
                 Debug.Log("-1 Life!");
+                AudioSource.PlayClipAtPoint(attackHouseSound, transform.position);
                 Destroy(gameObject);
             }
         }
@@ -98,6 +104,7 @@ public class BasicEnemyMoveScript : MonoBehaviour
         {
             tower.health -= damageToTower;
             Debug.Log("-10 Tower Health!");
+            AudioSource.PlayClipAtPoint(attackSound, transform.position);
 
             if (tower.health <= 0f)
             {

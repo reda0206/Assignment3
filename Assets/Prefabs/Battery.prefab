@@ -187,3 +187,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timer: 15
+  batterySound: {fileID: 8300000, guid: 466f40aa9d6def14f868fbef8471f256, type: 3}

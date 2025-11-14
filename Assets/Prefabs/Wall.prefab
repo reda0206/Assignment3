@@ -171,4 +171,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 791bbe61626e2c3458e773a08a8c1e67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 2500
+  health: 2000
+  lawnTile: {fileID: 0}

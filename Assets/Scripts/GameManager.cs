@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI timerText;
     public float energy = 40f;
     public float timer2 = 10f;
-    public float prepareTime = 50f;
+    public float prepareTime = 65f;
     public TextMeshProUGUI energyText;
 
     private bool isBattery = false;
@@ -28,6 +28,11 @@ public class GameManager : MonoBehaviour
     public float cannonCost = 80f;
     public float iceCannonCost = 100f;
     public float wallCost = 60f;
+
+    public GameObject pauseMenuUi;
+    public bool isPaused = false;
+    private List<AudioSource> audioSources = new List<AudioSource>();
+    public List<AudioSource> excludedAudioSources = new List<AudioSource>();
 
     private void Awake()
     {
@@ -73,69 +78,81 @@ public class GameManager : MonoBehaviour
         }
 
         if (Input.GetMouseButtonDown(0))
+        {
+            Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
+
+            if (hit.collider != null && hit.collider.CompareTag("Lawn"))
             {
-                Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
-
-                if (hit.collider != null && hit.collider.CompareTag("Lawn"))
+                LawnScript lawn = hit.collider.GetComponent<LawnScript>();
+                if (!lawn.isOccupied)
                 {
-                    LawnScript lawn = hit.collider.GetComponent<LawnScript>();
-                    if (!lawn.isOccupied)
+                    Vector3 spawnPos = new Vector3(hit.collider.transform.position.x, hit.collider.transform.position.y, 0.1f);
+                    if (isBattery)
                     {
-                        Vector3 spawnPos = new Vector3(hit.collider.transform.position.x, hit.collider.transform.position.y, 0.1f);
-                        if (isBattery)
+                        if (energy >= batteryCost)
                         {
-                            if (energy >= batteryCost)
-                            {
-                                GameObject newTower = Instantiate(batteryPrefab, spawnPos, Quaternion.identity);
-                                TowerScript towerScript = newTower.GetComponent<TowerScript>();
-                                towerScript.lawnTile = hit.collider.GetComponent<LawnScript>();
-                                lawn.isOccupied = true;
-                                energy -= batteryCost;
-                                isBattery = false;
-                            }
+                            GameObject newTower = Instantiate(batteryPrefab, spawnPos, Quaternion.identity);
+                            TowerScript towerScript = newTower.GetComponent<TowerScript>();
+                            towerScript.lawnTile = hit.collider.GetComponent<LawnScript>();
+                            lawn.isOccupied = true;
+                            energy -= batteryCost;
+                            isBattery = false;
                         }
+                    }
 
-                        else if (isCannon)
+                    else if (isCannon)
+                    {
+                        if (energy >= cannonCost)
                         {
-                            if (energy >= cannonCost)
-                            {
-                                GameObject newTower = Instantiate(cannonPrefab, spawnPos, Quaternion.identity);
-                                TowerScript towerScript = newTower.GetComponent<TowerScript>();
-                                towerScript.lawnTile = hit.collider.GetComponent<LawnScript>();
-                                lawn.isOccupied = true;
-                                energy -= cannonCost;
-                                isCannon = false;
-                            }
+                            GameObject newTower = Instantiate(cannonPrefab, spawnPos, Quaternion.identity);
+                            TowerScript towerScript = newTower.GetComponent<TowerScript>();
+                            towerScript.lawnTile = hit.collider.GetComponent<LawnScript>();
+                            lawn.isOccupied = true;
+                            energy -= cannonCost;
+                            isCannon = false;
                         }
-                        else if (isIceCannon)
+                    }
+                    else if (isIceCannon)
+                    {
+                        if (energy >= iceCannonCost)
                         {
-                            if (energy >= iceCannonCost)
-                            {
-                                GameObject newTower = Instantiate(iceCannonPrefab, spawnPos, Quaternion.identity);
-                                TowerScript towerScript = newTower.GetComponent<TowerScript>();
-                                towerScript.lawnTile = hit.collider.GetComponent<LawnScript>();
-                                lawn.isOccupied = true;
-                                energy -= iceCannonCost;
-                                isIceCannon = false;
-                            }
+                            GameObject newTower = Instantiate(iceCannonPrefab, spawnPos, Quaternion.identity);
+                            TowerScript towerScript = newTower.GetComponent<TowerScript>();
+                            towerScript.lawnTile = hit.collider.GetComponent<LawnScript>();
+                            lawn.isOccupied = true;
+                            energy -= iceCannonCost;
+                            isIceCannon = false;
                         }
-                        else if (isWall)
+                    }
+                    else if (isWall)
+                    {
+                        if (energy >= wallCost)
                         {
-                            if (energy >= wallCost)
-                            {
-                                GameObject newTower = Instantiate(wallPrefab, spawnPos, Quaternion.identity);
-                                TowerScript towerScript = newTower.GetComponent<TowerScript>();
-                                towerScript.lawnTile = hit.collider.GetComponent<LawnScript>();
-                                lawn.isOccupied = true;
-                                energy -= wallCost;
-                                isWall = false;
-                            }
+                            GameObject newTower = Instantiate(wallPrefab, spawnPos, Quaternion.identity);
+                            TowerScript towerScript = newTower.GetComponent<TowerScript>();
+                            towerScript.lawnTile = hit.collider.GetComponent<LawnScript>();
+                            lawn.isOccupied = true;
+                            energy -= wallCost;
+                            isWall = false;
                         }
                     }
                 }
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (!isPaused)
+            {
+                Pause();
+            }
+            else
+            {
+                Resume();
+            }
+        }
+    }
       
 
     public void BatteryButton()
@@ -168,5 +185,56 @@ public class GameManager : MonoBehaviour
         isCannon = false;
         isIceCannon = false;
         isWall = true;
+    }
+
+    public void Pause()
+    {
+        isPaused = true;
+        pauseMenuUi.SetActive(true);
+        PauseAudio();
+        Time.timeScale = 0f;
+    }
+
+    public void Resume()
+    {
+        isPaused = false;
+        pauseMenuUi.SetActive(false);
+        ResumeAudio();
+        Time.timeScale = 1f;
+    }
+
+    public void PauseAudio()
+    {
+        foreach (AudioSource audio in FindObjectsOfType<AudioSource>())
+        {
+            if (!excludedAudioSources.Contains(audio) && audio.isPlaying)
+            {
+                audio.Pause();
+                audioSources.Add(audio);
+            }
+        }
+    }
+
+    public void ResumeAudio()
+    {
+        for (int i = audioSources.Count - 1; i >= 0; i--)
+        {
+            if (audioSources[i])
+            {
+                audioSources[i].UnPause();
+                audioSources.RemoveAt(i);
+            }
+        }
+    }
+
+    public void QuitToMenuButton()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("MainMenuScene");
+    }
+
+    public void QuitGameButton()
+    {
+               Application.Quit();
     }
 }
