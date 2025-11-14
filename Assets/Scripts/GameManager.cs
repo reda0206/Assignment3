@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -44,6 +45,70 @@ public class GameManager : MonoBehaviour
         else
         {
             Destroy(gameObject);
+        }
+    }
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "GameScene")
+        {
+            GameObject found = null;
+            try 
+            {
+                found = GameObject.Find("PauseMenu");
+            } 
+            catch 
+            {
+                
+            }
+
+            if (found = null)
+            {
+                found = GameObject.Find("PauseMenuUi") ?? GameObject.Find("PauseMenu");
+            }
+            pauseMenuUi = found;
+
+            if (pauseMenuUi != null)
+            {
+                pauseMenuUi.SetActive(false);
+
+                AssignPauseMenuButtons();
+            }
+        }
+    }
+
+    private void AssignPauseMenuButtons()
+    {
+        if (pauseMenuUi == null) return;
+
+        Button resumeButton = pauseMenuUi.transform.Find("ResumeButton")?.GetComponent<Button>();
+        if (resumeButton != null)
+        {
+            resumeButton.onClick.RemoveAllListeners();
+            resumeButton.onClick.AddListener(Resume);
+        }
+
+        Button quitToMenuButton = pauseMenuUi.transform.Find("QuitToMenuButton")?.GetComponent<Button>();
+        if (quitToMenuButton != null)
+        {
+            quitToMenuButton.onClick.RemoveAllListeners();
+            quitToMenuButton.onClick.AddListener(QuitToMenuButton);
+        }
+
+        Button quitGameButton = pauseMenuUi.transform.Find("QuitGameButton")?.GetComponent<Button>();
+        {
+            quitGameButton.onClick.RemoveAllListeners();
+            quitGameButton.onClick.AddListener(QuitGameButton);
         }
     }
 
@@ -235,6 +300,6 @@ public class GameManager : MonoBehaviour
 
     public void QuitGameButton()
     {
-               Application.Quit();
+        Application.Quit();
     }
 }

@@ -14,6 +14,7 @@ public class FastEnemyMoveScript : MonoBehaviour
     private Coroutine destroying;
     private Color originalColor;
     private Color slowedColor = Color.cyan;
+    private bool isSlowed = false;
     public AudioClip hitSound;
     public AudioClip attackSound;
     public AudioClip attackHouseSound;
@@ -49,9 +50,13 @@ public class FastEnemyMoveScript : MonoBehaviour
         }
         else if (collision.gameObject.CompareTag("IceCannonBall"))
         {
-            StartCoroutine(SlowDown());
-            Debug.Log("Enemy Slowed!");
-            AudioSource.PlayClipAtPoint(hitSound, transform.position);
+            if (isSlowed == false)
+            {
+                isSlowed = true;
+                StartCoroutine(SlowDown());
+                Debug.Log("Enemy Slowed!");
+                AudioSource.PlayClipAtPoint(hitSound, transform.position);
+            }
             Destroy(collision.gameObject);
         }
         else if (collision.gameObject.CompareTag("Tower"))
@@ -123,5 +128,6 @@ public class FastEnemyMoveScript : MonoBehaviour
         yield return new WaitForSeconds(5f);
         moveSpeed = originalMoveSpeed;
         GetComponent<SpriteRenderer>().color = originalColor;
+        isSlowed = false;
     }
 }

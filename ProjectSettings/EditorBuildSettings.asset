@@ -9,11 +9,14 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenuScene.unity
     guid: 69eae84ff998bd54fb157e80addc7678
   - enabled: 1
+    path: Assets/Scenes/CreditsScene.unity
+    guid: b6c93883f0e72414abe1a4e24e160e95
+  - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
   - enabled: 1
-    path: Assets/Scenes/CreditsScene.unity
-    guid: b6c93883f0e72414abe1a4e24e160e95
+    path: Assets/Scenes/GameOverScene.unity
+    guid: 7e428241dd122b64cb422b64db1aa7c4
   - enabled: 1
     path: Assets/Scenes/WinScene.unity
     guid: e2dc549985817cc46a7c5addaa3b0fb3

@@ -49,13 +49,17 @@ public class EnemySpawnScript : MonoBehaviour
             difficultyLevel += 1;
             timer2 = 60f;
 
-            if (spawnInterval <= 15f)
+            if (spawnInterval > 7f)
             {
                 spawnInterval -= 2f;
             }
-            else if (spawnInterval > 3f)
+            else if (spawnInterval <= 7f)
             {
                 spawnInterval -= 1f;
+            }
+            else if (spawnInterval <= 2f)
+            {
+                spawnInterval = 2f;
             }
         }
     }
